@@ -13,7 +13,7 @@ print(">>>loading data...")
 labeled_images = pd.read_csv(PATH_TRAIN)
 images = labeled_images.iloc[:,1:]
 labels = labeled_images.iloc[:,:1]
-train_images, test_images,train_labels, test_labels = train_test_split(images, labels, train_size=0.8, random_state=0)
+train_images, test_images,train_labels, test_labels = train_test_split(images, labels, train_size=0.9, random_state=0)
 del labeled_images
 
 # make picture from grayscale to turely black white image
@@ -38,14 +38,3 @@ print(">>>Model training has been finished.Running test for current model...")
 print(">>>Test Score:",clf.score(test_images,test_labels),"\n>>>saving model...")
 joblib.dump(clf, 'svm_svc.model') 
 print(">>>model saved.\n>>>done.")
-
-# train with SVM.LinearSVC()
-print(">>>start training model... with svm.LinearSVC()")
-clf = svm.LinearSVC()
-clf.fit(train_images, train_labels.values.ravel())
-print(">>>Model training has been finished.Running test for current model...")
-print(">>>Test Score:",clf.score(test_images,test_labels),"\n>>>saving model...")
-joblib.dump(clf, 'svm_LinearSVC.model') 
-print(">>>model saved.\n>>>done.")
-
-

@@ -25,14 +25,3 @@ df.index+=1
 df.columns=['Label']
 df.to_csv('results.csv', header=True)
 print(">>>done.")
-
-clf = joblib.load('svm_LinearSVC.model')
-print(">>>predicting...")
-results=clf.predict(test_data)
-print(">>>saving results...")
-df = pd.DataFrame(results)
-df.index.name='ImageId'
-df.index+=1
-df.columns=['Label']
-df.to_csv('results.csv', header=True)
-print(">>>done.")
