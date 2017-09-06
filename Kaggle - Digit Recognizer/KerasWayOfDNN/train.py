@@ -1,44 +1,42 @@
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense , Dropout , Lambda, Flatten
-from keras.optimizers import Adam ,RMSprop
-from sklearn.model_selection import train_test_split
+from keras.layers import Dense,Flatten
 
 PATH_TRAIN = "../data/train.csv"
 
-# create the training & test sets, skipping the header row with [1:]
-train = pd.read_csv(PATH_TRAIN)
-print(train.shape)
-train.head()
+# loading training data
+print(">>>loading data...")
+labeled_images = pd.read_csv(PATH_TRAIN)
+images = labeled_images.iloc[:,1:]
+labels = labeled_images.iloc[:,:1]
+print(">>>preprocessing data...")
+images[images>0]=1
+images = images.as_matrix().reshape(images.shape[0], 28, 28,1)
+pm = []
+for x  in labels.as_matrix():
+    rl = [0,0,0,0,0,0,0,0,0,0]
+    rl[x[0]] = 1
+    pm.append(rl.copy())
+    print(x[0],":",rl)
+labels = np.asarray(pm)
+print(">>>images.shape=",images.shape,"\tlabels.shape=",labels.shape)
+# setup an ANN
+print('>>>setup sequential nerual network...')
+model = Sequential()
+model.add(Dense(units=784,activation='sigmoid',input_shape=(28,28,1) ))
+model.add(Flatten())
+model.add(Dense(units=10,activation='sigmoid'))
+print('>>>model.input_shape=',model.input_shape,"\tmodel.output_shape=",model.output_shape)
+print('>>>compiling...')
+model.compile(optimizer='sgd',loss='mean_squared_error',metrics=['accuracy'])
 
-X_train = (train.ix[:,1:].values).astype('float32') # all pixel values
-y_train = train.ix[:,0].values.astype('int32') # only labels i.e targets digits
+# start training this model
+print('>>>training model...')
+model.fit(images,labels,epochs=2,verbose=1,validation_split=0.2)
 
+# save model
+print('>>>done.\n>>>saving model...')
+model.save('digital_recog_w_sequentialDenseNN.h5fmodel')  # creates a HDF5 file 'my_model.h5'
+print(">>>all done.")
 
-#Convert train datset to (num_images, img_rows, img_cols) format 
-X_train = X_train.reshape(X_train.shape[0], 28, 28)
-
-for i in range(6, 9):
-    plt.subplot(330 + (i+1))
-    plt.imshow(X_train[i], cmap=plt.get_cmap('gray'))
-    plt.title(y_train[i])
-
-
-#expand 1 more dimention as 1 for colour channel gray
-X_train = X_train.reshape(X_train.shape[0], 28, 28,1)
-X_train.shape
-
-
-mean_px = X_train.mean().astype(np.float32)
-std_px = X_train.std().astype(np.float32)
-
-def standardize(x): 
-    return (x-mean_px)/std_px
-
-
-from keras.utils.np_utils import to_categorical
-y_train= to_categorical(y_train)
-num_classes = y_train.shape[1]
-num_classes
