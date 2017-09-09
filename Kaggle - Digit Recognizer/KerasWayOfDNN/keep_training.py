@@ -19,7 +19,6 @@ for x  in labels.as_matrix():
     rl = [0,0,0,0,0,0,0,0,0,0]
     rl[x[0]] = 1
     pm.append(rl.copy())
-    #print(x[0],":",rl)
 labels = np.asarray(pm)
 print(">>>images.shape=",images.shape,"\tlabels.shape=",labels.shape)
 
@@ -29,7 +28,7 @@ model = load_model('digital_recog_w_sequentialDenseNN.h5fmodel')
 
 # start training this model
 print('>>>keep training model...')
-history =  model.fit(images,labels,epochs=100,verbose=1,validation_split=0.3,batch_size=128)
+history =  model.fit(images,labels,epochs=50,verbose=1,validation_split=0.2,batch_size=300)
 
 #saving model
 print('>>>done.\n>>>saving model...')
