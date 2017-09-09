@@ -3,6 +3,7 @@
 
 from scipy.ndimage import interpolation as itp
 from matplotlib import pyplot as plt
+import random
 import numpy as np
 import pandas as pd
 
@@ -34,6 +35,18 @@ if True:
         rotate_list.append([ label, img135 ])
         rotate_list.append([ label, img180 ])
         i+=1
+        """
+        plt.subplot(221)
+        plt.title(label)
+        plt.imshow(img45)
+        plt.subplot(222)
+        plt.imshow(img90)
+        plt.subplot(223)
+        plt.imshow(img135)
+        plt.subplot(224)
+        plt.imshow(img180)
+        plt.show()
+        """
     print(">>>processing rotation",i,"/",lenx)
 
 # shift
@@ -42,16 +55,48 @@ if True:
     i = 0
     for image,label in zip(images,labels):
         print(">>>processing shifting",i,"/",lenx,end='\r')
-        shift_rb5 = itp.shift(image,[2,2])
-        shift_lt5 = itp.shift(image,[-2,-2])
-        shift_rt5 = itp.shift(image,[2,-2])
-        shift_lb5 = itp.shift(image,[-2,2])
+        shift_rb5 = itp.shift(image,[2.5,2.5])
+        shift_lt5 = itp.shift(image,[-2.5,-2.5])
+        shift_rt5 = itp.shift(image,[2.5,-2.5])
+        shift_lb5 = itp.shift(image,[-2.5,2.5])
         shift_list.append( [ label, shift_rb5 ] )
         shift_list.append( [ label, shift_lt5 ] )
         shift_list.append( [ label, shift_rt5 ] )
         shift_list.append( [ label, shift_lb5 ] )
         i+=1
+        """
+        plt.subplot(221)
+        plt.title(label)
+        plt.imshow(shift_rb5)
+        plt.subplot(222)
+        plt.imshow(shift_lt5)
+        plt.subplot(223)
+        plt.imshow(shift_rt5)
+        plt.subplot(224)
+        plt.imshow(shift_lb5)
+        plt.show()
+        """
     print(">>>processing shifting",i,"/",lenx)
+
+# random noisy
+random_noisy_list = []
+if True:
+    i = 0
+    for image,label in zip(images,labels):
+        print(">>>processing random noisy",i,"/",lenx,end='\r')
+        pick = random.randrange(75)
+        #plt.subplot(211)
+        #plt.title(label)
+        #plt.imshow(image)
+        for i in range(pick):
+            lx = random.randrange(28)
+            ly = random.randrange(28)
+            image[lx][ly] = abs(image[lx][ly] - 255)
+        #plt.subplot(212)
+        #plt.imshow(image)
+        #plt.show()
+        i+=1
+    print(">>>processing random noisy",i,"/",lenx)
 
 
 # combine these three transformation dataset with original dataset

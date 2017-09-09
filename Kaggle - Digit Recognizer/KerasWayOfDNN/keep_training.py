@@ -5,7 +5,7 @@ from printTrainingHistory import plotLossAndAcc
 pd.options.mode.chained_assignment = None
 
 PATH_TRAIN = "../data/train.csv"
-#PATH_TRAIN = "./new_dataset.csv"
+PATH_TRAIN = "./new_dataset.csv"
 
 # loading training data
 print(">>>loading data...")
