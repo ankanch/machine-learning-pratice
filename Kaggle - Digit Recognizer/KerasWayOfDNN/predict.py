@@ -6,8 +6,8 @@ PATH_TEST = "../data/test.csv"
 # load test data
 print('>>>loading test data...')
 test_data=pd.read_csv(PATH_TEST)
-test_data[test_data>0]=1
-test_data = test_data.as_matrix().reshape(test_data.shape[0], 28, 28,1)
+test_data /= 255
+test_data = test_data.as_matrix()
 
 # load model
 print('>>>loading model...')
