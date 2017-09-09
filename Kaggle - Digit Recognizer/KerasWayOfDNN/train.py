@@ -9,7 +9,6 @@ pd.options.mode.chained_assignment = None
 
 PATH_TRAIN = "../data/train.csv"
 #PATH_TRAIN = "./new_dataset.csv"
-#PATH_TRAIN = "./new_dataset_shift_only.csv"
 
 # loading training data
 print(">>>loading data...")
@@ -35,8 +34,6 @@ print('>>>setup sequential nerual network...')
 model = Sequential()
 model.add(Dense(units=512,activation='relu',input_shape=(784,) ))
 model.add(Dropout(0.2))
-model.add(Dense(512,activation='relu'))
-model.add(Dropout(0.2))
 model.add(Dense(256,activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(units=10,activation='softmax'))
@@ -46,7 +43,7 @@ model.compile(optimizer=Adam(lr=0.001),loss='mean_squared_error',metrics=['accur
 
 # start training this model
 print('>>>training model...')
-history = model.fit(images,labels,epochs=30,verbose=1,validation_split=0.2,batch_size=300)
+history = model.fit(images,labels,epochs=130,verbose=1,validation_split=0.2,batch_size=300)
 
 # save model
 print('>>>done.\n>>>saving model...')

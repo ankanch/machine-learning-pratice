@@ -5,6 +5,7 @@ from printTrainingHistory import plotLossAndAcc
 pd.options.mode.chained_assignment = None
 
 PATH_TRAIN = "../data/train.csv"
+#PATH_TRAIN = "./new_dataset.csv"
 
 # loading training data
 print(">>>loading data...")
@@ -12,7 +13,10 @@ labeled_images = pd.read_csv(PATH_TRAIN)
 images = labeled_images.iloc[:,1:]
 labels = labeled_images.iloc[:,:1]
 print(">>>preprocessing data...")
+images = images.astype('float32')
 images /= 255
+mean = np.mean(images)
+images -= mean
 images = images.as_matrix()
 pm = []
 for x  in labels.as_matrix():
@@ -20,15 +24,15 @@ for x  in labels.as_matrix():
     rl[x[0]] = 1
     pm.append(rl.copy())
 labels = np.asarray(pm)
-print(">>>images.shape=",images.shape,"\tlabels.shape=",labels.shape)
 
 # setup an ANN
 print('>>>loading nerual network...')
 model = load_model('digital_recog_w_sequentialDenseNN.h5fmodel')
+model.summary()
 
 # start training this model
 print('>>>keep training model...')
-history =  model.fit(images,labels,epochs=50,verbose=1,validation_split=0.2,batch_size=300)
+history =  model.fit(images,labels,epochs=130,verbose=1,validation_split=0.2,batch_size=300)
 
 #saving model
 print('>>>done.\n>>>saving model...')

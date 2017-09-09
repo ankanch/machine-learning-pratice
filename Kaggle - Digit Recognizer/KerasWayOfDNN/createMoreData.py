@@ -21,13 +21,13 @@ i = 0
 # start transformation
 # rotate from 45, to 180, with 45 degree per step
 rotate_list = []
-if False:
+if True:
     for image,label in zip(images,labels):
         print(">>>processing rotation",i,"/",lenx,end='\r')
-        img45 = itp.rotate(image,45,reshape=False)
-        img90 = itp.rotate(image,90,reshape=False)
-        img135 = itp.rotate(image,135,reshape=False)
-        img180 = itp.rotate(image,180,reshape=False)
+        img45 = itp.rotate(image,35,reshape=False)
+        img90 = itp.rotate(image,-35,reshape=False)
+        img135 = itp.rotate(image,-25,reshape=False)
+        img180 = itp.rotate(image,25,reshape=False)
         rotate_list.append([ label, image ])
         rotate_list.append([ label, img45 ])
         rotate_list.append([ label, img90 ])
@@ -38,19 +38,20 @@ if False:
 
 # shift
 shift_list = []
-i = 0
-for image,label in zip(images,labels):
-    print(">>>processing shifting",i,"/",lenx,end='\r')
-    shift_rb5 = itp.shift(image,[3,3])
-    shift_lt5 = itp.shift(image,[-3,-3])
-    shift_rt5 = itp.shift(image,[3,-3])
-    shift_lb5 = itp.shift(image,[-3,3])
-    shift_list.append( [ label, shift_rb5 ] )
-    shift_list.append( [ label, shift_lt5 ] )
-    shift_list.append( [ label, shift_rt5 ] )
-    shift_list.append( [ label, shift_lb5 ] )
-    i+=1
-print(">>>processing shifting",i,"/",lenx)
+if True:
+    i = 0
+    for image,label in zip(images,labels):
+        print(">>>processing shifting",i,"/",lenx,end='\r')
+        shift_rb5 = itp.shift(image,[2,2])
+        shift_lt5 = itp.shift(image,[-2,-2])
+        shift_rt5 = itp.shift(image,[2,-2])
+        shift_lb5 = itp.shift(image,[-2,2])
+        shift_list.append( [ label, shift_rb5 ] )
+        shift_list.append( [ label, shift_lt5 ] )
+        shift_list.append( [ label, shift_rt5 ] )
+        shift_list.append( [ label, shift_lb5 ] )
+        i+=1
+    print(">>>processing shifting",i,"/",lenx)
 
 
 # combine these three transformation dataset with original dataset
@@ -75,6 +76,6 @@ print(">>>converting to str",i,"/",lenx)
 print(">>>saving...")
 res = "\n".join(final_str)
 res = label_str + "\n" + res
-with open("new_dataset_shift_only.csv","w") as ff:
+with open("new_dataset.csv","w") as ff:
     ff.write(res)
 print(">>>all done.")
