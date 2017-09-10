@@ -35,7 +35,7 @@ if True:
         rotate_list.append([ label, img135 ])
         rotate_list.append([ label, img180 ])
         i+=1
-        """
+        #"""
         plt.subplot(221)
         plt.title(label)
         plt.imshow(img45)
@@ -46,7 +46,8 @@ if True:
         plt.subplot(224)
         plt.imshow(img180)
         plt.show()
-        """
+        #"""
+        break
     print(">>>processing rotation",i,"/",lenx)
 
 # shift
@@ -64,7 +65,7 @@ if True:
         shift_list.append( [ label, shift_rt5 ] )
         shift_list.append( [ label, shift_lb5 ] )
         i+=1
-        """
+        #"""
         plt.subplot(221)
         plt.title(label)
         plt.imshow(shift_rb5)
@@ -75,7 +76,8 @@ if True:
         plt.subplot(224)
         plt.imshow(shift_lb5)
         plt.show()
-        """
+        #"""
+        break
     print(">>>processing shifting",i,"/",lenx)
 
 # random noisy
@@ -85,17 +87,18 @@ if True:
     for image,label in zip(images,labels):
         print(">>>processing random noisy",i,"/",lenx,end='\r')
         pick = random.randrange(75)
-        #plt.subplot(211)
-        #plt.title(label)
-        #plt.imshow(image)
+        plt.subplot(211)
+        plt.title(label)
+        plt.imshow(image)
         for i in range(pick):
             lx = random.randrange(28)
             ly = random.randrange(28)
             image[lx][ly] = abs(image[lx][ly] - 255)
-        #plt.subplot(212)
-        #plt.imshow(image)
-        #plt.show()
+        plt.subplot(212)
+        plt.imshow(image)
+        plt.show()
         i+=1
+        break
     print(">>>processing random noisy",i,"/",lenx)
 
 
