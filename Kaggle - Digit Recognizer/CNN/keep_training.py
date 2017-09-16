@@ -32,7 +32,7 @@ model.summary()
 
 # start training this model
 print('>>>keep training model...')
-history =  model.fit(images,labels,epochs=50,verbose=1,validation_split=0.1,batch_size=300)
+history =  model.fit(images,labels,epochs=50,verbose=1,validation_split=0.2,batch_size=300)
 
 #saving model
 print('>>>done.\n>>>saving model...')
