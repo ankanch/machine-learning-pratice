@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import torch
 import random
 import pandas as pd
@@ -7,29 +6,6 @@ from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
-dtype = torch.cuda.FloatTensor
-
-# loading training data
-print(">>>loading data...")
-labeled_images = pd.read_csv("./data/train.csv")
-images = labeled_images.iloc[:,1:]
-labels = labeled_images.iloc[:,:1]
-print(">>>preprocessing data...")
-images = images.astype('float32')
-images /= 255
-mean = np.mean(images)
-images -= mean
-images = np.asarray([ x.reshape(1,28,28) for x in images.as_matrix() ])
-pm = []
-for x  in labels.as_matrix():
-    rl = [0,0,0,0,0,0,0,0,0,0]
-    rl[x[0]] = 1
-    rl = [ np.float32(x) for x in rl ]
-    pm.append(rl.copy())
-labels = np.asarray(pm)
-
-
 class CNN4MNIST(torch.nn.Module):
     def __init__(self):
         super(CNN4MNIST, self).__init__()
@@ -57,6 +33,26 @@ class CNN4MNIST(torch.nn.Module):
             num_features *= s
         return num_features
 
+
+# loading training data
+print(">>>loading data...")
+labeled_images = pd.read_csv("./data/train.csv")
+images = labeled_images.iloc[:,1:]
+labels = labeled_images.iloc[:,:1]
+print(">>>preprocessing data...")
+images = images.astype('float32')
+images /= 255
+mean = np.mean(images)
+images -= mean
+images = np.asarray([ x.reshape(1,28,28) for x in images.as_matrix() ])
+pm = []
+for x  in labels.as_matrix():
+    rl = [0,0,0,0,0,0,0,0,0,0]
+    rl[x[0]] = 1
+    rl = [ np.float32(x) for x in rl ]
+    pm.append(rl.copy())
+labels = np.asarray(pm)
+
 def shuffleCrossVaildationAndTrain(xset,yset,vaild_size=0.2):
     cvsize = int(len(xset)*vaild_size)
     x = 0
@@ -78,14 +74,15 @@ def shuffleCrossVaildationAndTrain(xset,yset,vaild_size=0.2):
             train_set_x.append(xset[i])
     return np.asarray(train_set_x),np.asarray(train_set_y),np.asarray(vaild_set_x),np.asarray(vaild_set_y)
 
-cnn4mnist = CNN4MNIST().cuda()
+print(">>>loading model...")
+model = torch.load('cnn4mnist.pt')
 criterion = nn.MSELoss()
-optimizer = optim.SGD(cnn4mnist.parameters(), lr=0.01)
-print(cnn4mnist)
-batch_size = 300*2
+print(model)
+optimizer = optim.SGD(model, lr=0.01)
+batch_size = 300
 cross_vaild = 0.2
 
-epoches = 400
+epoches = 5
 for i in range(epoches):
     ros = "Epoche" + str(i+1) + "/" + str(epoches) + '\t'
     mss = ""
@@ -98,9 +95,9 @@ for i in range(epoches):
         x = Variable(torch.from_numpy(xtrain[base:base+batch_size])).cuda()
         y = Variable(torch.from_numpy(ytrain[base:base+batch_size]), requires_grad=False).cuda()
 
-        y_pred = cnn4mnist(x)
+        y_pred = model(x)
 
-        cnn4mnist.zero_grad()
+        model.zero_grad()
         loss = criterion(y_pred,y)
         mss = ros + str(base) + "/" + str(round_need*batch_size) + "\tloss:" + str(loss.data[0])
         print(mss,end='\r')
@@ -109,8 +106,8 @@ for i in range(epoches):
     # cross vaildation
     px = Variable(torch.from_numpy(xvaild[:100])).cuda()
     py = Variable(torch.from_numpy(yvaild[:100]), requires_grad=False).cuda()
-    yp =  cnn4mnist(px)
+    yp =  model(px)
     loss = criterion(yp,py)
     print(mss,"\tcross vaildation loss:",loss.data[0])
 
-torch.save(cnn4mnist, 'cnn4mnist.pt')
+torch.save(model, 'cnn4mnist.pt')
