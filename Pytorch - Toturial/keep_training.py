@@ -11,18 +11,24 @@ class CNN4MNIST(torch.nn.Module):
         super(CNN4MNIST, self).__init__()
         self.conv1 = nn.Conv2d(1,64,5)
         self.conv2 = nn.Conv2d(64,128,3)
-        self.fc1 = nn.Linear(128 * 5 * 5, 256)
-        self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 10)
+        self.conv3 = nn.Conv2d(128,256,3)
+        self.fc1 = nn.Linear(4096, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, 10)
 
     def forward(self, x):
         # Max pooling over a (2, 2) window
+        #print(x.size())
         x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
-        # If the size is a square you can only specify a single number
-        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        #print(x.size())
+        x = F.relu(self.conv2(x))
+        #print(x.size())
+        x = F.max_pool2d(F.relu(self.conv3(x)), 2)
+        #print(x.size())
         x = x.view(-1, self.num_flat_features(x))
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        #print(x.size())
+        x = F.relu(self.fc1( x ))
+        x = F.relu(self.fc2( F.dropout(x) ))
         x = self.fc3(x)
         return x
 
@@ -78,7 +84,7 @@ print(">>>loading model...")
 model = torch.load('cnn4mnist.pt')
 criterion = nn.MSELoss()
 print(model)
-optimizer = optim.SGD(model, lr=0.01)
+optimizer = optim.Adam(model.parameters())
 batch_size = 300
 cross_vaild = 0.2
 
