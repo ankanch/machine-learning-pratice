@@ -1,5 +1,6 @@
 import torch
 import random
+from loadingDiscrateSet import loadDisCrateSet,PATH_TEST
 import pandas as pd
 import numpy as np
 from torch.autograd import Variable
@@ -51,19 +52,23 @@ print(">>>loading data...")
 labeled_images = pd.read_csv("./data/train.csv")
 images = labeled_images.iloc[:,1:]
 labels = labeled_images.iloc[:,:1]
+# loading discrate
+labs,npimg = loadDisCrateSet(PATH_TEST)
+images = np.append(images.as_matrix(),npimg,axis=0)
+labels = np.append(labels.as_matrix(),labs,axis=0)
 print(">>>preprocessing data...")
 images = images.astype('float32')
 images /= 255
-mean = np.mean(images)
-images -= mean
-images = np.asarray([ x.reshape(1,28,28) for x in images.as_matrix() ])
+images -= np.mean(images)
+images = np.asarray([ x.reshape(1,28,28) for x in images ])
 pm = []
-for x  in labels.as_matrix():
+for x  in labels:
     rl = [0,0,0,0,0,0,0,0,0,0]
     rl[x[0]] = 1
     rl = [ np.float32(x) for x in rl ]
     pm.append(rl.copy())
 labels = np.asarray(pm)
+print(">>>data size=",labels.shape,images.shape)
 
 def shuffleCrossVaildationAndTrain(xset,yset,vaild_size=0.2):
     cvsize = int(len(xset)*vaild_size)
@@ -91,7 +96,7 @@ model = torch.load('cnn4mnist.pt')
 criterion = nn.MSELoss()
 print(model)
 optimizer = optim.Adam(model.parameters())
-batch_size = 300
+batch_size = 10
 cross_vaild = 0.2
 
 epoches = 5
