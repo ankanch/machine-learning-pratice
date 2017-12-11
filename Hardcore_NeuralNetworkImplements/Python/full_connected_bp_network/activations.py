@@ -5,6 +5,8 @@
 # 
 import numpy as np
 
+# activations
+
 def Sigmoid(x):
     ex = np.exp(x)
     return ex/(ex+1)
@@ -12,7 +14,14 @@ def Sigmoid(x):
 def ReLU(x):
     return 0 if x<0 else x
 
+# deveriative of activations
 
+def Sigmoid_(x):
+    sx = Sigmoid(x)
+    return sx*(1-sx)
+
+def ReLU_(x):
+    return 0 if x<0 else 1  
 
 if __name__ == "__main__":
     print("Sigmoid(2)=",Sigmoid(2))
