@@ -47,20 +47,23 @@ class SequenceModel:
 
         Returns the output of the last layer.
         """
-        self.forward_propagation_output = self.input_value
-        for l in self.layers:
-            self.forward_propagation_output = l.activate(self.forward_propagation_output)
-        self.output_value = self.forward_propagation_output  #stores output propagation output value
+        for sample in self.input_value:
+            # perform forward propagation on one sample
+            layer_output = sample
+            for l in self.layers:
+                layer_output = l.activate(layer_output)
+            self.forward_propagation_output.append(layer_output)  #stores propagation output value of one sample
         return self.forward_propagation_output
 
     def computeError(self):
-        return self.error_function(self.output_value,self.input_value)
+        return self.error_function(self.forward_propagation_output,self.output_value)
 
     def backpropagate(self):
         """
         Perform backpropagation to optimize weights.
         """
         pass
+        
 
 
 if __name__ == "__main__":

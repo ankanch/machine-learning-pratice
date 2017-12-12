@@ -6,7 +6,7 @@
 import numpy as np
 
 def squard_error(inputv,targetv):
-    minsv = [ x-y for x,y in zip(inputv,targetv) ]
+    minsv = np.subtract(inputv,targetv)
     return np.sum( np.asarray([ 0.5*np.square(x) for x in minsv ]) )
 
 

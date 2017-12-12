@@ -14,11 +14,13 @@ outputLayer = Dense.Dense(2,1,activation=Sigmoid,name="output layer")
 inputLayer.printLayerData()
 outputLayer.printLayerData()
 
-model = SequenceModel.SequenceModel(input_value=[1,1],output_value=[1,0],error_function=errorFunctions.squard_error)
+model = SequenceModel.SequenceModel(input_value=[[1,1],[1,0],[0,1],[0,0]]
+                                    ,output_value=[0,1,1,0]
+                                    ,error_function=errorFunctions.squard_error)
 model.addLayer(inputLayer)
 model.addLayer(outputLayer)
 print(model.printModelData())
 
-print(model.propagate())
-print(model.backpropagate())
-print(model.computeError())
+print("propagate:",model.propagate())
+print("backpropagate:",model.backpropagate())
+print("error:",model.computeError())
