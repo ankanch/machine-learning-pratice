@@ -15,11 +15,14 @@ class SequenceModel:
     output_value = []                   # stores the output value list for corresponding inputs
     forward_propagation_output = []     # stores the forward propagation output 
     error_function = None               # sotres error function
+    learning_rate = 0.01                # learning rate
+    error_list = []                     # stores error list for output layer
 
-    def __init__(self,layers=[],input_value=[],output_value=[],error_function=None):
+    def __init__(self,layers=[],input_value=[],output_value=[],learning_rate=0.01,error_function=None):
         self.layers = layers
         self.input_value = input_value
         self.output_value = output_value
+        self.learning_rate = learning_rate
         self.error_function = error_function
 
     def addLayer(self,layer):
@@ -56,7 +59,8 @@ class SequenceModel:
         return self.forward_propagation_output
 
     def computeError(self):
-        return self.error_function(self.forward_propagation_output,self.output_value)
+        self.error_list,total_error  = self.error_function(self.forward_propagation_output,self.output_value)
+        return total_error
 
     def backpropagate(self):
         """

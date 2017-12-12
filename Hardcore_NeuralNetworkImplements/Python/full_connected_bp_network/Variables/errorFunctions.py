@@ -6,8 +6,14 @@
 import numpy as np
 
 def squard_error(inputv,targetv):
+    """
+    return error_list for each neurons and total error
+
+    error_list,total_error
+    """
     minsv = np.subtract(inputv,targetv)
-    return np.sum( np.asarray([ 0.5*np.square(x) for x in minsv ]) )
+    error_list = np.asarray([ 0.5*np.square(x) for x in minsv ])
+    return error_list,np.sum( error_list )
 
 
 

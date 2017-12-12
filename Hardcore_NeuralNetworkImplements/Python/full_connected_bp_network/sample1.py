@@ -22,5 +22,5 @@ model.addLayer(outputLayer)
 print(model.printModelData())
 
 print("propagate:",model.propagate())
-print("backpropagate:",model.backpropagate())
 print("error:",model.computeError())
+print("backpropagate:",model.backpropagate())

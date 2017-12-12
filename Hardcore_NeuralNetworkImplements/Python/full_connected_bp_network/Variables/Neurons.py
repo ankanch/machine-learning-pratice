@@ -34,6 +34,7 @@ class Neuron:
         """
         return np.multiply(self.value , self.weights)
 
+
     def printNeuronData(self):
         print(" > neuron value=",self.value,"\tWeights=",self.weights)
 

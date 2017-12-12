@@ -48,6 +48,22 @@ class Dense:
         self.after_activated = list(map(self.activation_function,self.before_activated))
         return self.after_activated
 
+    def computeGradient(self,error_list=[]):
+        """
+        Compute the influence of weight change to the total error,using the chain rule.
+
+        Compute 'the partial derivative of E with respect to w'
+        ,the gradient with respect to w
+
+        return the gradient list, a float number list
+        """
+        # compute related on activated-value
+
+
+        # conpute related on net-value
+
+        # compute related on weight
+
     def printLayerData(self):
         print("Layer Data For [",self.name,"]")
         for i,n in enumerate(self.neurons):
